@@ -1,0 +1,154 @@
+ 4 Sep 2017:
+* Updating documentation
+
+31 Jul 2017:
+* Fixed bug affecting neutrino fluxes
+* Not using static const double class members as they are not standard C++
+
+11 May 2017: SimProp v2r4 released
+
+21 Mar 2017:
+* Contrary to what the documentation stated, the tree nuc previously did not
+  include non-baryonic particles.  This has now been fixed.
+* It is now possible to bin electrons and positrons by redshift using -p 2, or
+  only write their total energy using -p 3.  This results in much smaller
+  output files without much loss of precision, as the shape of electromagnetic
+  cascades at Earth does not depend on initial energy and depends only weakly
+  on initial redshift (see e.g. PRD 94, 023007 (2016) [arXiv:1603.03989]).
+
+16 Nov 2016:
+* more comprehensible cross section parameter file names
+
+24 Oct 2016:
+* new tree in output file listing the values of command-line options, so that
+  even if the file is renamed the information is not lost
+
+18 Oct 2016:
+* An arbitrary injection spectral index can now be requested via the -g
+  command-line option.
+
+18 Feb 2016:
+* Survival probabilities interpolated logarithmically rather than linearly
+* Writing out electron-positron pairs with -p 1 (warning: very large files and
+  inaccurate approximation of e+/e- spectra)
+
+17 Feb 2016:
+* Standardizing the way photons and electrons are treated (Eint = Eprod,
+  zint = zprod, IntMult = 1000, written in both trees); can be propagated via
+  external programs such as Elmag
+* Adding electrons/positrons from beta decay and muon decay
+
+SimProp v2r3 (3 Feb 2016):
+
+* Alpha particle photodisintegration implemented (use -M 3 (Breit-Wigner) or 
+  -M 4 (Gaussians) to enable; cross section parametrizations are read from
+  standard input, e.g. ./SimProp -M 3 < params.txt).
+  params.txt contains cross section parametrizations fitted to TALYS-1.6 data.
+  
+* Photodisintegration cross section scaling with -n and -a
+  (e.g -n 3 -a 0.1 scales cross sections for photodisintegration into nucleons 
+  by 3 and for photodisintegration into alpha particles by 0.1;
+  only works with -M 3 and -M 4)
+
+* New EBL models implemented (use ./SimProp -h for the full list).
+
+
+New version v2r2 released on 6 May 2015.
+
+
+10 Mar 2015:
+
+* Pion photoproduction for nuclei neglected (as in v2r0) with -S -1.
+
+
+ 3 Feb 2014:
+
+* Fixed bug affecting three-body decays (i.e. neutrino spectra).
+
+
+19 May 2013:
+
+* Implementing Kneiske et al. EBL model (-L 3).
+
+
+ 9 May 2013:
+
+* Old output tree (-o 0) no longer includes photons and neutrinos.
+
+
+ 2 May 2013:
+
+* Making pion production on EBL faster.
+
+
+30 Apr 2013:
+
+* Implementing pion production on the EBL (-S 2).
+
+
+10 Apr 2013:
+
+* Fixing bug in pion production on beryllium.
+
+
+ 5 Apr 2013:
+
+* Removing injection ID and flavour from summary output tree -- we only inject nuclei and protons, so A and Z suffice to identify them.
+
+
+ 3 Apr 2013:
+
+* Making branch and intmult in the old tree consistent: now branch is always incremented by 1 from the parent to the products (it used to be kept the same for the daughter nucleus in beta decays), and intmult is always 0 for particles reaching Earth (it used to be -1 for nuclei propagated stochastically).
+
+
+20 Mar 2014:
+
+* Pion photoproduction now approximated as continuous (rather than neglected) with -S 0 (as for protons).
+
+
+18 Mar 2013:
+
+* New format for the summary tree: now nuclei, photons and neutrinos are listed separately.
+* Nucleon now ejected from nucleus following pion production
+
+
+14 Mar 2013:
+
+* Photons are now all assumed to reach Earth and written into tree summary again.
+* Adding leafs injID and endID to tree summary, to store PDG/CRPropa particle ID codes (see https://crpropa.desy.de/Basic_Concepts#Particle_ID) for particles at injection/Earth respectively.
+
+
+13 Mar 2013:
+
+* Implementing pion photoproduction by nuclei on the CMB.
+
+
+ 7 Mar 2013:
+
+* Re-implemented the infrared background in a much faster way.
+
+
+New feature, 28 Feb 2013:
+
+* Photons are now assumed to interact with probability given by the data in arXiv:1302.6460v1.  On the other hand, whereas the interaction point and the final energy before interaction are stored in tree nuc, the interaction products are not followed, i.e. the photon is assumed to 'disappear'. (The sampling of the interaction point assumes z << 1, but at larger redshift very few photons survive anyway.)
+
+
+Bug fixes, 12 Feb 2013:
+
+* Adding branch Flav to tree nuc (flavour of the particle, same as injFlav and endFlav in tree summary), otherwise it was impossible to tell neutrinos and photons apart.
+* Adding branch endzprod[nprod] to tree summary (redshift at production of particles reaching Earth), so that photons can now be propagated using external programs (the initial energy and redshift being endEnergy*(1.+endzprod) and endzprod respectively).
+
+
+version 2.1,  7 Feb 2013:
+
+* Implemented stochastic treatment of photohadronic processes during the propagation of protons (use option -S 0 to disable).
+* Implemented beta decay of nuclei (use option -D 0 to disable).
+* As a result of the two changes above, the tree nuc will also contain unstable particles (pions, muons, neutrons...) and photons and neutrinos.  (The tree is still named nuc in order to keep backward compatibility with existing automated tools for data analysis.)  The unstable particles are assumed to decay instantaneously (zEnd = zOri, EEnd = EOri) and intmult is set to 1000 + the number of decay products (this may change in a future version).  All photons and neutrinos are assumed to reach Earth with EEnd = EOri/(1.+zOri), though this is inaccurate for photons and will be changed in a future version.
+* Added a new 'condensed' tree (summary) in the output file, with an entry for each event, containing the branches:
+  * event: event number (starting from 0);
+  * injEnergy, injRedshift, injDist, injA, injZ: energy, redshift, distance from Earth, baryonic number, and electric charge of the primary particle at injection;
+  * injFlav: flavour of the primary particle (+1 for electrons and electron neutrinos, -1 for positrons and electron antineutrinos, +2 for muons and muon neutrinos, etc., 0 for particles other than leptons).  (This is always 0 in the current version, where only nuclei and protons are injected.)
+  * nprod: number of particles reaching Earth;
+  * endEnergy[nprod], endA[nprod], endZ[nprod], endFlav[nprod]: vectors with the energies, baryonic numbers, etc. of the particles reaching Earth.
+  (This tree is not included by default; use option -o 1 to only have the new tree and -o 2 to have both the old and the new tree.)
+* Fixed a bug that caused simulations to be much slower, especially for heavy nuclei.  (This does not affect the results.)

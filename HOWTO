@@ -1,0 +1,29 @@
+
+How to install and run SimProp
+-------------------------------------------------------------------------------
+  
+  1) make sure that ROOT is installed and set up properly! 
+     $ROOTSYS/bin and $ROOTSYS/lib have to be respectively in 
+     your PATH and LD_LIBRARY_PATH (DYLD_LIBRARY_PATH for Mac OS)
+     For detailed info how to get, install and set up ROOT see: 
+     http://root.cern.ch/drupal/
+
+  2) type "make" to compile the software
+    
+  3) Add the installation directory to your PATH.
+     For example in bash:
+     export PATH=${PATH}:/home/jhendrix/SimProp/
+     
+  4) Run SimProp!
+     program options can be obtained by typing "SimProp -h"
+     Note: the standard output can be *very* verbose, so we recommend doing
+       SimProp [options] | grep Event
+     when requesting large numbers of events.
+
+  5) The utility program Convert is also generated. This program
+     convert a SimProp output from ROOT format to an ASCII file.
+     (It only works with the "nucl" tree, which is only generated when
+     the "-o 1" switch is not used.) 
+
+For any question please write to: SimProp-dev@aquila.infn.it
+-------------------------------------------------------------------------------
